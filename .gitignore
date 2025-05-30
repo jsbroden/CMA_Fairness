@@ -4,7 +4,8 @@ __pycache__/
 *$py.class
 
 # Virtual environment
-venv/
+cma_f/ 
+#venv/
 .env/ 
 
 # Jupyter Notebook checkpoints
