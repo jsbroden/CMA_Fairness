@@ -71,45 +71,67 @@ def evaluate_sets(pred_sets: list, y_true: pd.Series) -> dict:
     return {"coverage": coverage, "avg_size": avg_size}
 
 
-#
+# Anlayze CP sets
 
 
-def summarize_by_predset(cp_df):
+def summarize_for_predicate(cp_df, predicate, description):
     """
-    Given a DataFrame cp_df with columns:
-      - 'pred_set'        (each cell is a Python set {0}, {1}, or {0,1})
-      - 'true_label'      (0/1)
-      - 'frau1'           (0/1)
-      - 'nongerman'       (0/1 or NaN)
-      - 'nongerman_male'  (0/1)
-      - 'nongerman_female'(0/1)
-    This prints (or returns) for each of the three categories:
-      {0}, {1}, and {0,1}:
-        • proportion where true_label==1
-        • proportion where frau1==1
-        • proportion where nongerman==1
-        • proportion where nongerman_male==1
-        • proportion where nongerman_female==1
+    Filters cp_df by rows where pred_set satisfies `predicate`,
+    then computes proportions of various flags among that subset.
+
+    predicate: a function that takes one set s and returns True/False.
+    description: string to print in the header.
     """
+    subset = cp_df[cp_df["pred_set"].apply(predicate)]
+    n_subset = len(subset)
+    if n_subset == 0:
+        print(f"No cases where pred_set {description}.")
+        return
 
-    def _subset_props(df, desc):
-        n = len(df)
-        if n == 0:
-            return {"desc": desc, "n": 0}
+    prop_true_label_1 = (subset["true_label"] == 1).sum() / n_subset
+    prop_frau1_1 = (subset["frau1"] == 1).sum() / n_subset
+    prop_ng_1 = (subset["nongerman"] == 1).sum() / n_subset
+    prop_ng_male_1 = (subset["nongerman_male"] == 1).sum() / n_subset
+    prop_ng_female_1 = (subset["nongerman_female"] == 1).sum() / n_subset
 
-        return {
-            "desc": desc,
-            "n": n,
-            "p_true_1": (df["true_label"] == 1).mean(),
-            "p_frau1_1": (df["frau1"] == 1).mean(),
-            "p_nongerman_1": (df["nongerman"] == 1).mean(),
-            "p_nongerman_male_1": (df["nongerman_male"] == 1).mean(),
-            "p_nongerman_female_1": (df["nongerman_female"] == 1).mean(),
-        }
+    print(f"Among cases where pred_set {description}:")
+    print(f"  Proportion true_label == 1:        {prop_true_label_1:.3f}")
+    print(f"  Proportion frau1 == 1:             {prop_frau1_1:.3f}")
+    print(f"  Proportion nongerman == 1:         {prop_ng_1:.3f}")
+    print(f"  Proportion nongerman_male == 1:    {prop_ng_male_1:.3f}")
+    print(f"  Proportion nongerman_female == 1:  {prop_ng_female_1:.3f}")
+    print()
 
-    results = []
-    for s, label in [({0}, "{0}"), ({1}, "{1}"), ({0, 1}, "{0,1}")]:
-        sub = cp_df[cp_df["pred_set"].apply(lambda x: set(x) == s)]
-        results.append(_subset_props(sub, f"pred_set == {label}"))
 
-    return pd.DataFrame(results)
+def summarize_by_indicator(df, indicator_col, positive_label, negative_label):
+    """
+    Groups df by indicator_col (0 vs 1), sums the is_ambiguous/is_zero_only/
+    is_one_only flags,then returns both raw counts and percentages
+    (out of each subgroup's size).
+
+    positive_label/negative_label: names to assign to index 1 and 0
+    respectively.
+    """
+    df = df.copy()
+    df["is_ambiguous"] = df["pred_set"].apply(lambda s: s == {0, 1})
+    df["is_zero_only"] = df["pred_set"].apply(lambda s: s == {0})
+    df["is_one_only"] = df["pred_set"].apply(lambda s: s == {1})
+
+    sub = df.dropna(subset=[indicator_col])
+
+    # Compute raw counts
+    counts = (
+        sub.groupby(indicator_col)[["is_ambiguous", "is_zero_only", "is_one_only"]]
+        .sum()
+        .rename(index={0: negative_label, 1: positive_label})
+    )
+
+    # Compute subgroup sizes (number of rows where indicator == 0 or 1)
+    sizes = (
+        sub[indicator_col]
+        .value_counts()
+        .rename(index={0: negative_label, 1: positive_label})
+    )
+    percentages = counts.div(sizes, axis=0) * 100
+
+    return counts, percentages
