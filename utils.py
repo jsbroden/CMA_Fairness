@@ -214,3 +214,55 @@ def aif_plot(
 
     ax2.yaxis.set_tick_params(labelsize=16)
     ax2.grid(True)
+
+
+def aif_plot2(
+    x,
+    x_name,
+    y_left,
+    y_left2,
+    y_left_name,
+    y_right,
+    y_right2,
+    y_right_name,
+    cutoff1,
+    cutoff12,
+    cutoff2,
+    cutoff22,
+    ax1min=0,
+    ax1max=1,
+    ax2min=0,
+    ax2max=1,
+):
+    fig, ax1 = plt.subplots(figsize=(10, 7))
+    ax1.plot(x, y_left, color="steelblue")
+    ax1.plot(x, y_left2, color="steelblue", linestyle="dashdot")
+    ax1.set_xlabel(x_name, fontsize=18)
+    ax1.set_ylabel(y_left_name, color="steelblue", fontsize=18)
+    ax1.xaxis.set_tick_params(labelsize=16)
+    ax1.yaxis.set_tick_params(labelsize=16)
+    ax1.set_ylim(ax1min, ax1max)
+
+    # fix! understand purpose and uncomment again:
+    # ax1.legend(handles=legend_elements, fontsize=16)
+
+    ax2 = ax1.twinx()
+    ax2.plot(x, y_right, color="r")
+    ax2.plot(x, y_right2, color="r", linestyle="dashdot")
+    ax2.set_ylabel(y_right_name, color="r", fontsize=18)
+    ax2.set_ylim(ax2min, ax2max)
+
+    ax2.axvline(cutoff1, color="k", linestyle="dashed")
+    ax2.axvline(cutoff2, color="k", linestyle="dotted")
+    ax2.text(cutoff1, ax1max + 0.015, "P1b-l", fontsize=16)
+    ax2.text(cutoff2, ax1max + 0.015, "P1a-l", fontsize=16)
+
+    ax2.axvline(cutoff12, color="gray", linestyle="dashed")
+    ax2.axvline(cutoff22, color="gray", linestyle="dotted")
+    ax2.text(
+        cutoff12 - 0.055, ax1max + 0.015, "P1b-s", fontsize=16, color="gray"
+    )  # cutoff12 - 0.025
+    ax2.text(cutoff22 - 0.025, ax1max + 0.015, "P1a-s", fontsize=16, color="gray")
+
+    ax2.yaxis.set_tick_params(labelsize=16)
+    ax2.grid(True)
