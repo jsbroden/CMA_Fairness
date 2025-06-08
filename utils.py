@@ -52,7 +52,7 @@ def find_threshold(nonconformity: np.ndarray, alpha: float) -> float:
     """
     Return the (1-alpha)-quantile (higher interpolation) of the nc scores.
     """
-    return np.quantile(nonconformity, 1 - alpha, interpolation="higher")
+    return np.quantile(nonconformity, 1 - alpha, method="higher")
 
 
 def predict_conformal_sets(model, X: pd.DataFrame, q_hat: float) -> np.ndarray:
