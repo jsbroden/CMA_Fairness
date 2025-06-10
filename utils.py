@@ -46,6 +46,9 @@ def compute_nc_scores(probs: np.ndarray, labels: np.ndarray) -> np.ndarray:
 
 
 # ??? Alternative scoring function negative log-probabilites??
+# -> since $-\log p$ is a monotonic transform of $p$, it would
+# lead to the same ordering of calibration scores and an
+# equivalent conformal threshold in this binary case.)
 
 
 def find_threshold(nonconformity: np.ndarray, alpha: float) -> float:
@@ -55,7 +58,7 @@ def find_threshold(nonconformity: np.ndarray, alpha: float) -> float:
     return np.quantile(nonconformity, 1 - alpha, method="higher")
 
 
-def predict_conformal_sets(model, X: pd.DataFrame, q_hat: float) -> np.ndarray:
+def predict_conformal_sets(model, X: pd.DataFrame, q_hat: float) -> list[set[int]]:
     """
     For each row in X, compute the conformal prediction set.
     Returns a list of sets.
@@ -64,6 +67,9 @@ def predict_conformal_sets(model, X: pd.DataFrame, q_hat: float) -> np.ndarray:
     nonconf_matrix = 1.0 - probs  # shape (n, 2): nc score for label = 0, 1
     # include c whenver nonconf_matrix[i,c] <= q_hat
     return [set(np.where(nc_row <= q_hat)[0]) for nc_row in nonconf_matrix]
+
+
+# add? Ensures non-empty sets by including the top class if needed.
 
 
 def evaluate_sets(pred_sets: list, y_true: pd.Series) -> dict:
@@ -76,7 +82,7 @@ def evaluate_sets(pred_sets: list, y_true: pd.Series) -> dict:
     return {"coverage": coverage, "avg_size": avg_size}
 
 
-# Anlayze CP sets
+# Analyze CP sets
 
 
 def summarize_for_predicate(cp_df, predicate, description):
