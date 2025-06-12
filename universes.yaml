@@ -6,67 +6,43 @@
   id: 2
   model: logreg
   threshold_policy: top30
-- feature_set: with_protected
+- feature_set: without_protected
   id: 3
   model: logreg
-  threshold_policy: middle30
+  threshold_policy: top15
 - feature_set: without_protected
   id: 4
   model: logreg
-  threshold_policy: top15
-- feature_set: without_protected
-  id: 5
-  model: logreg
   threshold_policy: top30
-- feature_set: without_protected
-  id: 6
-  model: logreg
-  threshold_policy: middle30
 - feature_set: with_protected
-  id: 7
+  id: 5
   model: penalized_logreg
   threshold_policy: top15
 - feature_set: with_protected
+  id: 6
+  model: penalized_logreg
+  threshold_policy: top30
+- feature_set: without_protected
+  id: 7
+  model: penalized_logreg
+  threshold_policy: top15
+- feature_set: without_protected
   id: 8
   model: penalized_logreg
   threshold_policy: top30
 - feature_set: with_protected
   id: 9
-  model: penalized_logreg
-  threshold_policy: middle30
-- feature_set: without_protected
-  id: 10
-  model: penalized_logreg
+  model: rf
   threshold_policy: top15
+- feature_set: with_protected
+  id: 10
+  model: rf
+  threshold_policy: top30
 - feature_set: without_protected
   id: 11
-  model: penalized_logreg
-  threshold_policy: top30
+  model: rf
+  threshold_policy: top15
 - feature_set: without_protected
   id: 12
-  model: penalized_logreg
-  threshold_policy: middle30
-- feature_set: with_protected
-  id: 13
-  model: rf
-  threshold_policy: top15
-- feature_set: with_protected
-  id: 14
   model: rf
   threshold_policy: top30
-- feature_set: with_protected
-  id: 15
-  model: rf
-  threshold_policy: middle30
-- feature_set: without_protected
-  id: 16
-  model: rf
-  threshold_policy: top15
-- feature_set: without_protected
-  id: 17
-  model: rf
-  threshold_policy: top30
-- feature_set: without_protected
-  id: 18
-  model: rf
-  threshold_policy: middle30

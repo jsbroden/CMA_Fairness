@@ -3,7 +3,7 @@ import yaml
 
 models = ["logreg", "penalized_logreg", "rf"]
 feature_sets = ["with_protected", "without_protected"]
-thresholds = ["top15", "top30", "middle30"]
+thresholds = ["top15", "top30"]  # "middle30"
 
 universe_grid = list(itertools.product(models, feature_sets, thresholds))
 
