@@ -272,3 +272,21 @@ def aif_plot2(
 
     ax2.yaxis.set_tick_params(labelsize=16)
     ax2.grid(True)
+
+
+# multiverse, added 30.6.
+def apply_universe_filters(df, universe):
+    """
+    Apply all data‑level decisions encoded in one universe dict.
+    Currently supports:
+      • exclude_subgroups  – { 'keep-all', 'drop-non-german' }
+    Returns a *copy* of df with rows dropped accordingly.
+    """
+    df = df.copy()
+
+    # ---- (A) row‑level exclusion ------------------------------------------
+    if universe["exclude_subgroups"] == "drop-non-german":
+        df = df[df["nongerman"] != 1]  # keep rows where nongerman == 0
+
+    # (...other subgroup filters can be added here...)
+    return df
