@@ -1,48 +1,120 @@
-- feature_set: with_protected
-  id: 1
+- id: 1
   model: logreg
+  feature_set: with_protected
+  exclude_subgroups: keep-all
   threshold_policy: top15
-- feature_set: with_protected
-  id: 2
+- id: 2
   model: logreg
+  feature_set: with_protected
+  exclude_subgroups: keep-all
   threshold_policy: top30
-- feature_set: without_protected
-  id: 3
+- id: 3
   model: logreg
+  feature_set: with_protected
+  exclude_subgroups: drop-non-german
   threshold_policy: top15
-- feature_set: without_protected
-  id: 4
+- id: 4
   model: logreg
+  feature_set: with_protected
+  exclude_subgroups: drop-non-german
   threshold_policy: top30
-- feature_set: with_protected
-  id: 5
-  model: penalized_logreg
+- id: 5
+  model: logreg
+  feature_set: without_protected
+  exclude_subgroups: keep-all
   threshold_policy: top15
-- feature_set: with_protected
-  id: 6
-  model: penalized_logreg
+- id: 6
+  model: logreg
+  feature_set: without_protected
+  exclude_subgroups: keep-all
   threshold_policy: top30
-- feature_set: without_protected
-  id: 7
-  model: penalized_logreg
+- id: 7
+  model: logreg
+  feature_set: without_protected
+  exclude_subgroups: drop-non-german
   threshold_policy: top15
-- feature_set: without_protected
-  id: 8
-  model: penalized_logreg
+- id: 8
+  model: logreg
+  feature_set: without_protected
+  exclude_subgroups: drop-non-german
   threshold_policy: top30
-- feature_set: with_protected
-  id: 9
-  model: rf
+- id: 9
+  model: penalized_logreg
+  feature_set: with_protected
+  exclude_subgroups: keep-all
   threshold_policy: top15
-- feature_set: with_protected
-  id: 10
-  model: rf
+- id: 10
+  model: penalized_logreg
+  feature_set: with_protected
+  exclude_subgroups: keep-all
   threshold_policy: top30
-- feature_set: without_protected
-  id: 11
-  model: rf
+- id: 11
+  model: penalized_logreg
+  feature_set: with_protected
+  exclude_subgroups: drop-non-german
   threshold_policy: top15
-- feature_set: without_protected
-  id: 12
+- id: 12
+  model: penalized_logreg
+  feature_set: with_protected
+  exclude_subgroups: drop-non-german
+  threshold_policy: top30
+- id: 13
+  model: penalized_logreg
+  feature_set: without_protected
+  exclude_subgroups: keep-all
+  threshold_policy: top15
+- id: 14
+  model: penalized_logreg
+  feature_set: without_protected
+  exclude_subgroups: keep-all
+  threshold_policy: top30
+- id: 15
+  model: penalized_logreg
+  feature_set: without_protected
+  exclude_subgroups: drop-non-german
+  threshold_policy: top15
+- id: 16
+  model: penalized_logreg
+  feature_set: without_protected
+  exclude_subgroups: drop-non-german
+  threshold_policy: top30
+- id: 17
   model: rf
+  feature_set: with_protected
+  exclude_subgroups: keep-all
+  threshold_policy: top15
+- id: 18
+  model: rf
+  feature_set: with_protected
+  exclude_subgroups: keep-all
+  threshold_policy: top30
+- id: 19
+  model: rf
+  feature_set: with_protected
+  exclude_subgroups: drop-non-german
+  threshold_policy: top15
+- id: 20
+  model: rf
+  feature_set: with_protected
+  exclude_subgroups: drop-non-german
+  threshold_policy: top30
+- id: 21
+  model: rf
+  feature_set: without_protected
+  exclude_subgroups: keep-all
+  threshold_policy: top15
+- id: 22
+  model: rf
+  feature_set: without_protected
+  exclude_subgroups: keep-all
+  threshold_policy: top30
+- id: 23
+  model: rf
+  feature_set: without_protected
+  exclude_subgroups: drop-non-german
+  threshold_policy: top15
+- id: 24
+  model: rf
+  feature_set: without_protected
+  exclude_subgroups: drop-non-german
   threshold_policy: top30
