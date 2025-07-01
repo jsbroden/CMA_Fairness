@@ -1,46 +1,57 @@
+# generate_universes.py
 import itertools
 import yaml
+import pathlib
 
-models = ["logreg", "penalized_logreg", "rf"]
-feature_sets = ["with_protected", "without_protected"]
-exclude_groups = ["keep-all", "drop-non-german"]
-thresholds = ["top15", "top30"]  # "middle30"
+MODELS = ["logreg", "penalized_logreg", "rf"]
+FEATURE_SETS = ["with_protected", "without_protected"]
+THRESHOLDS = ["top15", "top30"]
+EXCLUDE_GROUPS = ["keep-all", "drop-non-german"]
 
-# universe_grid = list(
-#    itertools.product(models, feature_sets, exclude_groups, thresholds)
-# )
 
-universe_grid = itertools.product(models, feature_sets, exclude_groups, thresholds)
+def build_universes():
+    grid = list(itertools.product(MODELS, FEATURE_SETS, THRESHOLDS, EXCLUDE_GROUPS))
 
-universes = []
-for i, (model, feat_set, excl, thr) in enumerate(universe_grid, start=1):
-    universes.append(
+    # fresh list every call
+    universes = [
         dict(
-            id=i,
-            model=model,
-            feature_set=feat_set,
+            id=i + 1,
+            model=m,
+            feature_set=fs,
             exclude_subgroups=excl,
             threshold_policy=thr,
         )
+        for i, (m, fs, thr, excl) in enumerate(grid)
+    ]
+    return universes
+
+
+def main(out_file="universes.yaml"):
+    universes = build_universes()
+
+    # --- safety: assert no duplicate tuples -------------------------
+    assert len(universes) == len(
+        {
+            (
+                u["model"],
+                u["feature_set"],
+                u["exclude_subgroups"],
+                u["threshold_policy"],
+            )
+            for u in universes
+        }
+    ), "Duplicate design point detected!"
+
+    # --- write / overwrite YAML -------------------------------------
+    pathlib.Path(out_file).write_text(yaml.dump(universes, sort_keys=False))
+
+    print(
+        f"Generated {len(universes)} universes "
+        f"({len(MODELS)}×{len(FEATURE_SETS)}×"
+        f"{len(EXCLUDE_GROUPS)}×{len(THRESHOLDS)}). "
+        f"Wrote → {out_file}"
     )
 
-universes.append(
-    dict(
-        id=i,
-        model=model,
-        feature_set=feat_set,
-        exclude_subgroups=excl,
-        threshold_policy=thr,
-    )
-)
 
-# Save to YAML
-with open("universes.yaml", "w") as f:
-    yaml.dump(universes, f, sort_keys=False)
-
-print(
-    f"Generated {len(universes)} universes "
-    f"({len(models)}×{len(feature_sets)}×{len(exclude_groups)}x{len(thresholds)})."
-)
-
-# :((( last universe is generated twice
+if __name__ == "__main__":
+    main()
